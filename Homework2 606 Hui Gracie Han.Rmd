@@ -1,0 +1,197 @@
+---
+title: "Week2 606 Hmwk"
+author: "Hui Gracie Han"
+date: "Sep2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### Ex 2.6 Dice rolls. If you roll a pair of fair dice, what is the probability of  
+#### (a) Getting a sum of 1
+P(A) = 0  
+#### (b) Getting a sum of 5
+P(B) = 4/36 || 0.11111...  
+#### (c) Getting a sum of 12
+P(C) = 1/36 || 0.028  
+```{r}
+library(openintro)
+getwd()
+
+```
+
+### Ex 2.8 Poverty and language. 
+#Source of data: 2010 American Community Survey
+#### Q (a) Are living below the poverty line and speaking a foreign language at home disjoint? 
+
+Asnwer:These events are not disjoint. It is very likely (common sense wise, could be up to 30% among family immigrants without high level of education) for the subject to speak both a foreign language and live below the poverty line.  
+
+#### (b) Draw a Venn diagram summarizing the variables and their associated probabilities
+#### load the package first
+
+```{r}
+#install.packages('VennDiagram')
+
+library (VennDiagram)
+
+# these data are from the American Community Survey provided with the exercise
+belowPoverty = 14.6
+foreignLanguage  = 20.7
+joint_both = 4.2
+## draw the VennDiagram based on the data above
+grid.newpage()
+vennDiagram = draw.pairwise.venn(belowPoverty,foreignLanguage,cross.area=joint_both,category = c(" Below PL","Speak FL"), fill = c('blue', 'green'))
+```
+####(c)  What percent of Americans live below the poverty line and only speak English at home? 
+Asnwer: The venn diagram shows us that there is 10.4% of Americans who fit these criteria
+
+####(d) What percent of Americans live below the poverty line or speak a foreign language at home? 
+Answer: The venn diagram shows us that there is 31.1% of Americans who fit into this criteria
+```{r}
+ AnswerD<-belowPoverty+foreignLanguage-joint_both
+AnswerD
+```
+
+####(e) What percent of Americans live above the poverty line and only speak English at home? 
+Answer: There are 64.7% of Americans who fit into this criteria. See formula blow, we take the total of those below the PL, subtract that from 100. We take the remainder and subtract the total of those who speak FL, the remainder is our answer.  
+```{r}
+AbovePovertyLine = 100-belowPoverty
+AnswerE = AbovePovertyLine - foreignLanguage
+AnswerE
+```
+####(f) Is the event that someone lives below the poverty line independent of the event that the person speaks a foreign language at home?
+Answer: Yes, they are dependent of each other.  This is because it fails the test of multiplication rule, P(A&B) should equal the P(A)*P(B)...Whic it does not. Another way to look at it, would be does the venn diagram cross? If yes, then dependent.  
+```{r}
+answerF<-(belowPoverty * foreignLanguage )/100
+answerF
+```
+
+### Ex. 2.20 Assortative mating.
+```{r}
+femaleBlue = c(78,19,11)
+femaleBrown = c(23,23,9)
+femaleGreen = c(13,12,16)
+df = data.frame(femaleBlue,femaleBrown,femaleGreen)
+row.names(df) = c("maleBlue","maleBrown","maleGreen")
+cbind(df, Total = rowSums(df))
+```
+
+####(a)What is the probability that a randomly chosen male respondent or his partner has blue eyes? 
+Awnswer: P(A)+P(B)-P(A&B) = 114/204 + 108/204 - 78/204
+Answer: 0.7058824, or, there is a 70.5% probability that a randomly chosen male or his partner has blue eyes
+
+####(b)What is the probability that a randomly chosen male respondent with blue eyes has a partner with blue eyes? 
+Answer:P(A|B)
+ 78/114 =0.6842105, or, there is a 68% probability that a randomly chosen male with blue eyes has a partenr with blue eyes
+
+####(c) What is the probability that a randomly chosen male respondent with brown eyes has a partner with blue eyes? What about the probability of a randomly chosen male respondent with green eyes having a partner with blue eyes? 
+Answer: P(A|B)
+ 19/54  = 0.3518519  , or, there is a 35% probability that a random chosen male with brown eyes has a partner with blue eyes
+  11/36  = 0.3055556, or, there is a30% probability that a random chosen male with green eyes has a partner with blue eyes
+
+####(d) Does it appear that the eye colors of male respondents and their partners are independent? Explain your reasoning.
+Answer:It does not appear that the eye color pairings are independent, the probabilities of a blue eyed male has a blue eyed female partner is disproportionately higher than othe probability of any other colors.
+
+
+###Ex. 2.30 Books on a bookshelf
+```{r}
+hardcover = c(13,59)
+paperback = c(59,8)
+df230 = data.frame(hardcover,paperback)
+row.names(df230)= c('Fiction','nonFiction')
+cbind(df230, Total = rowSums(df230))
+```
+
+#### (a) Find the probability of drawing a hardcover book then a paperback ficction book second when drawing without replacement
+Answer: the probality is 18.5%
+```{r}
+probDraw1st = 28/95
+probDraw2nd = 59/94
+prob2 = probDraw1st*probDraw2nd
+prob2
+```
+####(b)Determine the probability of drawing a ficction book 1st and then a hardcover book second, when drawing without replacement.
+Answer: thre are 22.5% of probability
+```{r}
+probDraw1st = 72/95
+probDraw2nd = 28/94
+probb = probDraw1st*probDraw2nd
+probb
+```
+####(c)Calculate the probability of the scenario in part (b), except this time complete the calculations under the scenario where the 1st book is placed back on the bookcase before randomly drawing the second book.
+Answer: the probability is 23.33%
+```{r}
+probDraw1st = 72/95
+probDraw2nd = 28/95
+prob3 = probDraw1st*probDraw2nd
+prob3
+```
+####(d) The Final answers to parts (b) and (c) are very similar. Explain why this is the case.
+Answer: Refer to pg103 from the OpenIntoStat book :  " When the sample size is only a mall fraction of the population (under 10%), observations are nearly independent even when sampling without replacement".  
+Sampling with or without replacement creates bigger differences in probability depending on the amount of events in question and items replaced, in this case the difference is 1/95 ot 2/95, in other words,1 or 2 out of 95 books is replaced/not-replaced.   
+
+
+###2.38 Baggage fees. The probalities are already given in the text book
+####(a) Build a probability model, compute the average revenue per passenger, and compute the corresponding standard deviation.
+```{r}
+BagNumb = c(0,1,2)
+BagCost = c(0,25,35)
+BagPercent = c(.54,.34,.12)
+df238 = data.frame(BagNumb,BagCost,BagPercent)
+print(df238)
+
+df238$Rev = df238$BagCost*df238$BagPercent
+RevPerPassger = sum(df238$Rev)
+RevPerPassger
+
+variancRevPerPassger = var(df238$Rev)
+variancRevPerPassger
+sdPerPassp = sd(df238$Ref)
+sdPerPassp
+```
+####(b)About how much revenue should the airline expect for a flight of 120 passengers? With what standard deviation? Note any assumptions you make and if you think they are justified.
+Answer:You can expect the avg revenue per flight to be 1524  per passenger, multiplied by 120number of passengers
+Answer:You can expect the deviation to be NA SD per passenger, multiplied by 120 number of passengers
+```{r}
+
+Rev120Passgr<-RevPerPassger*120
+Rev120Passgr
+
+sd120Passgr<-sdPerPassp*120
+sd120Passgr
+```
+
+
+### 2.44 Income and gender.  Data given in the book (as the table, seen in Income2009 vector below)
+```{r}
+income2009 = c("$1 - $9,999 or less", 
+            "$10,000 to $14,999", 
+            "$15,000 to $24,999",
+            "$25,000 to $34,999",
+            "$35,000 to $49,999",
+            "$50,000 to $64,000",
+            "$65,000 to $74,999",
+            "$75,000 to $99,999",
+            "$100,000 or more")
+PercentIncome = c(2.2,4.7,15.8,18.3,21.2,13.9,5.8,8.4,9.7)
+```
+
+####(a)Describe the distribution of total personal income.
+It is a bimodal distribution with right skew. All income data are skewed
+
+####(b)What is the probability that a randomly chosen US resident makes less than $50,000 per year?
+Answer: there are 62.2% of US residents who belong to that criteria
+```{r}
+Answer244b = sum(PercentIncome[1:5])
+Answer244b
+```
+####(c)What is the probability that a randomly chosen US resident makes less than$50,000 per year and is female? Note any assumptions you make. 
+Asnwer:This sample comprise of 59% male to 41T female. So,  P(A&B) = P(A)*P(B)
+The probability that a randomly chosen US resident makes less than 50k a year and and is female is approx. 25.5%
+```{r}
+Asnwer244c<- Answer244b*.41
+Asnwer244c
+```
